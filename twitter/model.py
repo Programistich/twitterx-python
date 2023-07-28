@@ -27,7 +27,6 @@ class TweetModel:
 
     def __init__(self, status):
         self.id_str = status.id_str
-        self.reply_tweet_id = status.in_reply_to_status_id_str
         self.created_at = status.created_at
         self.retweeted = status.retweeted
         self.user = UserModel(status.user)
@@ -35,6 +34,7 @@ class TweetModel:
         self.lang = status.lang
         self.media = self.__parse_media__()
         self.text = self.__parse_text__()
+        self.reply_tweet_id = self.__parse_reply__()
 
     def get_tweet_url(self):
         return f"https://twitter.com/{self.user.screen_name}/status/{self.id_str}"
@@ -68,7 +68,7 @@ class TweetModel:
             text = text.replace(f"@{screen_name}", f"<a href='{url}'>@{screen_name}</a>")
 
         urls_hide = self.status.entities.get("urls", [])
-        for url_hide in urls_hide:
+        for index, url_hide in enumerate(urls_hide):
             url = url_hide["url"]
             expanded_url = url_hide["expanded_url"]
             text = text.replace(url, expanded_url)
@@ -101,3 +101,12 @@ class TweetModel:
                     print("best_video_url", best_video_url, "best_bitrate", best_bitrate)
                     media.append(Media(MediaType.VIDEO, best_video_url))
         return media
+
+    def __parse_reply__(self) -> str:
+        if self.status.in_reply_to_status_id_str is not None:
+            return self.status.in_reply_to_status_id_str
+
+        if self.status.is_quote_status:
+            return self.status.quoted_status_id_str
+
+        return None

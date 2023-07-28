@@ -26,13 +26,6 @@ async def send_many_tweet(
     tweet = get_tweet_by_id(tweet_id)
     exist_message_id = await get_message_id(message.chat.id, tweet.id_str)
     if exist_message_id is not None:
-        if is_main_tweet:
-            await message.answer(
-                text="Твит уже был отправлен ранее",
-                parse_mode="HTML",
-                reply_to_message_id=exist_message_id,
-                disable_web_page_preview=True
-            )
         return exist_message_id
 
     chat_id, message_id = await send_tweet(is_main_tweet, message, reply_message_id, tweet)
