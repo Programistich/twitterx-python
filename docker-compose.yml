@@ -5,7 +5,7 @@ services:
   twitter-redis:
     networks:
       twitter-net:
-    container_name: twitter-redis
+    container_name: redis
     image: redis:alpine
     restart: always
     environment:
@@ -13,10 +13,10 @@ services:
     ports:
       - "127.0.0.1:6381:6379"
 
-  twtter-bot:
+  twitter-bot:
     networks:
       twitter-net:
-    container_name: twitter-bot
+    container_name: bot
     build:
       dockerfile: Dockerfile
       context: .
