@@ -5,7 +5,7 @@ services:
   twitter-redis:
     networks:
       twitter-net:
-    container_name: redis
+    container_name: twitter-redis
     image: redis:alpine
     restart: always
     environment:
@@ -16,13 +16,17 @@ services:
   twitter-bot:
     networks:
       twitter-net:
-    container_name: bot
+    container_name: twitter-bot
     build:
       dockerfile: Dockerfile
       context: .
     restart: always
     depends_on:
       - twitter-redis
+    environment:
+      - REDIS_HOST
+      - TWITTER_BEARER
+      - BOT_TOKEN
 
 networks:
   twitter-net:

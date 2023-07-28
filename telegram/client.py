@@ -1,8 +1,10 @@
+import os
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
 
-from config_reader import config
 
-bot = Bot(token=config.bot_token.get_secret_value(), session=AiohttpSession())
+bot_token = os.getenv('BOT_TOKEN')
+bot = Bot(token=bot_token, session=AiohttpSession())
 dp = Dispatcher()
 
