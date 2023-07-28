@@ -11,7 +11,7 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
-      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:6381:6381"
 
   twtter-bot:
     networks:
