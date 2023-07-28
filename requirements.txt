@@ -4,3 +4,4 @@ pydantic-settings==2.0
 tweepy[async]==4.14.0
 pydantic~=2.0.3
 googletrans==3.1.0a0
+redis==4.6.0

@@ -54,13 +54,24 @@ class TweetModel:
         return len(self.media) > 1
 
     def __parse_text__(self):
-        media_entity = self.status.entities.get("media", [])
-        media_urls = list(map(lambda media: media["url"], media_entity))
-
         text = self.status.full_text
 
+        media_entity = self.status.entities.get("media", [])
+        media_urls = list(map(lambda media: media["url"], media_entity))
         for media_url in media_urls:
             text = text.replace(media_url, "")
+
+        user_mentions = self.status.entities.get("user_mentions", [])
+        for user_mention in user_mentions:
+            screen_name = user_mention["screen_name"]
+            url = f"https://twitter.com/{screen_name}"
+            text = text.replace(f"@{screen_name}", f"<a href='{url}'>@{screen_name}</a>")
+
+        urls_hide = self.status.entities.get("urls", [])
+        for url_hide in urls_hide:
+            url = url_hide["url"]
+            expanded_url = url_hide["expanded_url"]
+            text = text.replace(url, expanded_url)
 
         if text is None:
             return ""

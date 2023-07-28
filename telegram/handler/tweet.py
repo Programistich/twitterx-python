@@ -3,30 +3,47 @@ import re
 from aiogram import types, Router
 from aiogram.filters import Command
 
-from telegram.sender.tweet_send import send_single_tweet
+import telegram.client
+from telegram.sender.tweet_send import send_single_tweet, send_tweets
 from utils import get_text_from_bot_command
 
 router = Router()
 
-tweet_regex = "https://(mobile.)?twitter.com/([a-zA-Z0-9_]+)/status/([0-9]+)?(.*)"
-tweet_id_group = 3
-tweet_pattern = re.compile(tweet_regex)
+TWEET_REGEX = "https://(mobile.)?twitter.com/([a-zA-Z0-9_]+)/status/([0-9]+)?(.*)"
+TWEET_ID_GROUP = 3
+tweet_pattern = re.compile(TWEET_REGEX)
 
 
-@router.message(lambda message: tweet_pattern.match(message.text) is not None)
+@telegram.client.dp.message(lambda message: tweet_pattern.match(message.text) is not None)
 async def get_single_tweet_by_link(message: types.Message):
-    tweet_id = tweet_pattern.match(message.text).group(tweet_id_group)
-    await send_single_tweet(tweet_id, message)
+    tweet_id = tweet_pattern.match(message.text).group(TWEET_ID_GROUP)
+
+    if message.reply_to_message is None:
+        reply_to_message_id = None
+    else:
+        reply_to_message_id = message.reply_to_message.message_id
+
+    await send_single_tweet(tweet_id, message, reply_to_message_id)
 
     # delete message with link
     await message.delete()
 
 
-@router.message(Command("full"))
+@telegram.client.dp.message(Command("full"))
 async def get_branch_tweets_by_link(message: types.Message):
     message_text = get_text_from_bot_command(message)
 
     is_tweet_link = tweet_pattern.match(message_text) is not None
-    if is_tweet_link:
-        tweet_id = tweet_pattern.match(message_text).group(tweet_id_group)
-        await message.answer("It is tweet with id: " + tweet_id)
+    if not is_tweet_link:
+        return
+
+    if message.reply_to_message is None:
+        reply_to_message_id = None
+    else:
+        reply_to_message_id = message.reply_to_message.message_id
+
+    tweet_id = tweet_pattern.match(message_text).group(TWEET_ID_GROUP)
+    await send_tweets(tweet_id, message, reply_to_message_id)
+
+    # delete message with link
+    await message.delete()

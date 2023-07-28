@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+
+  twitter-redis:
+    networks:
+      twitter-net:
+    container_name: twitter-redis
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  twtter-bot:
+    networks:
+      twitter-net:
+    container_name: twitter-bot
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: always
+    depends_on:
+      - twitter-redis
+    command: python main.py
+
+networks:
+  twitter-net:
