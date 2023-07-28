@@ -1,6 +1,6 @@
 from redis.asyncio.client import Redis
 
-redis = Redis(host='127.0.0.1', port=6381, decode_responses=True)
+redis = Redis(host='localhost', port=6379, decode_responses=True)
 
 
 async def get_message_id(chat_id, tweet_id):
