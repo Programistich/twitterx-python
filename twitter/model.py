@@ -87,11 +87,9 @@ class TweetModel:
 
     def get_hide_link(self):
         urls_hide = self.status.entities.get("urls", [])
-        first_url = urls_hide[0]
-        if first_url is None:
+        if len(urls_hide) == 0:
             return ""
-
-        return hide_link(first_url["expanded_url"])
+        return hide_link(urls_hide[0]["expanded_url"])
 
     def __parse_media__(self) -> [Media]:
         status = self.status
