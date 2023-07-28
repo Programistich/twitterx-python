@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.types import URLInputFile
 
-from cache.redis import set_message_id, get_message_id
+from cache.client import set_message_id, get_message_id
 from telegram.client import bot as telegram_bot
 from twitter.model import TweetModel
 from twitter.tweets import get_tweet_by_id, translate_tweet_text, find_tweet_branch
