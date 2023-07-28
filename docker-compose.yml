@@ -25,7 +25,6 @@ services:
     restart: always
     depends_on:
       - twitter-redis
-    command: python main.py
 
 networks:
   twitter-net:
