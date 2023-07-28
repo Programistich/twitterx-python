@@ -14,7 +14,7 @@ async def send_tweets(tweet_id: str, message: types.Message, reply_message_id=No
             text="Твит уже был отправлен ранее",
             parse_mode="HTML",
             reply_to_message_id=exist_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         return exist_message_id
 
@@ -56,7 +56,7 @@ async def send_single_tweet(
             text="Твит уже был отправлен ранее",
             parse_mode="HTML",
             reply_to_message_id=exist_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         return -1
 
@@ -78,7 +78,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
             caption=message_text,
             parse_mode="HTML",
             reply_to_message_id=reply_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         message_id = message.message_id
         chat_id = message.chat.id
@@ -90,7 +90,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
             caption=message_text,
             parse_mode="HTML",
             reply_to_message_id=reply_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         message_id = message.message_id
         chat_id = message.chat.id
@@ -116,7 +116,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
             caption=message_text,
             parse_mode="HTML",
             reply_to_message_id=reply_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         message_id = message[0].message_id
         chat_id = message[0].chat.id
@@ -126,7 +126,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
             text=message_text,
             parse_mode="HTML",
             reply_to_message_id=reply_message_id,
-            disable_web_page_preview=True
+            disable_web_page_preview=False
         )
         message_id = message.message_id
         chat_id = message.chat.id
@@ -134,10 +134,12 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
 
 
 def get_tweet_header(tweet: TweetModel, telegram_user, is_main_tweet):
+    hide_link = tweet.get_hide_link()
+
     if is_main_tweet:
-        return f"<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()} by {telegram_user.full_name}"
+        return f"{hide_link}<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()} by {telegram_user.full_name}"
     else:
-        return f"<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()}"
+        return f"{hide_link}<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()}"
 
 
 def get_tweet_body(tweet: TweetModel):

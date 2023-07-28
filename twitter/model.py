@@ -1,5 +1,7 @@
 from enum import Enum
 
+from aiogram.utils.markdown import hide_link
+
 
 class MediaType(Enum):
     PHOTO = "photo"
@@ -72,12 +74,24 @@ class TweetModel:
             url = url_hide["url"]
             expanded_url = url_hide["expanded_url"]
             text = text.replace(url, expanded_url)
+            # if index == 0:
+            #     text = hide_link(expanded_url) + "\n" + text.replace(url, expanded_url)
+            # else:
+            #     text = text.replace(url, expanded_url)
 
         if text is None:
             return ""
 
         else:
             return text.strip()
+
+    def get_hide_link(self):
+        urls_hide = self.status.entities.get("urls", [])
+        first_url = urls_hide[0]
+        if first_url is None:
+            return ""
+
+        return hide_link(first_url["expanded_url"])
 
     def __parse_media__(self) -> [Media]:
         status = self.status
