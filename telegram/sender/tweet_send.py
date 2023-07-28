@@ -8,6 +8,16 @@ from twitter.tweets import get_tweet_by_id, translate_tweet_text, find_tweet_bra
 
 
 async def send_tweets(tweet_id: str, message: types.Message, reply_message_id=None) -> int:
+    exist_message_id = await get_message_id(message.chat.id, tweet_id)
+    if exist_message_id is not None:
+        await message.answer(
+            text="Твит уже был отправлен ранее",
+            parse_mode="HTML",
+            reply_to_message_id=exist_message_id,
+            disable_web_page_preview=True
+        )
+        return exist_message_id
+
     tweets_branch = find_tweet_branch(tweet_id)
     current_reply_message_id = reply_message_id
     for index, tweet_branch_id in enumerate(reversed(tweets_branch)):
