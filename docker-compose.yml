@@ -8,8 +8,6 @@ services:
     container_name: twitter-redis
     image: redis:alpine
     restart: always
-    volumes:
-      - redis-data:/data
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
