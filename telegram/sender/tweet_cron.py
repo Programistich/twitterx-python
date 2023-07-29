@@ -81,6 +81,7 @@ async def send_tweet(chat_id: str, reply_message_id: int, tweet):
         message = await telegram_bot.send_message(
             text=hide_link + message_text,
             parse_mode="HTML",
+            chat_id=chat_id,
             reply_to_message_id=reply_message_id,
             disable_web_page_preview=hide_link == ""
         )

@@ -40,7 +40,7 @@ async def process_user(user_id):
             try:
                 await send_tweets(tweet_id = filter_status.id, chat_id = chat_id)
             except Exception as e:
-                print("error: ", e)
+                print(f"error: {chat_id} {filter_status.id}", e)
 
     # save last status id
     last_status = filter_statuses[0]
