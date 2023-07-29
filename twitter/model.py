@@ -1,3 +1,4 @@
+import re
 from enum import Enum
 
 from aiogram import types
@@ -36,9 +37,9 @@ class TweetModel:
         self.user = UserModel(status.user)
         self.status = status
         self.lang = status.lang
+        self.reply_tweet_id = self.__parse_reply__()
         self.media = self.__parse_media__()
         self.text = self.__parse_text__()
-        self.reply_tweet_id = self.__parse_reply__()
 
     def get_tweet_url(self):
         return f"https://twitter.com/{self.user.screen_name}/status/{self.id_str}"
@@ -72,14 +73,20 @@ class TweetModel:
             text = text.replace(f"@{screen_name}", f"<a href='{url}'>@{screen_name}</a>")
 
         urls_hide = self.status.entities.get("urls", [])
-        for index, url_hide in enumerate(urls_hide):
+        for url_hide in urls_hide:
             url = url_hide["url"]
             expanded_url = url_hide["expanded_url"]
-            text = text.replace(url, expanded_url)
-            # if index == 0:
-            #     text = hide_link(expanded_url) + "\n" + text.replace(url, expanded_url)
-            # else:
-            #     text = text.replace(url, expanded_url)
+
+            if self.reply_tweet_id is None:
+                text = text.replace(url, expanded_url)
+                continue
+
+            tweet_regex = f'https://(mobile.)?twitter.com/([a-zA-Z0-9_]+)/status/{self.reply_tweet_id}?(.*)'
+            tweet_pattern = re.compile(tweet_regex)
+            if tweet_pattern.match(expanded_url) is not None:
+                text = text.replace(url, "")
+            else:
+                text = text.replace(url, expanded_url)
 
         if text is None:
             return ""
@@ -89,6 +96,9 @@ class TweetModel:
 
     def get_hide_link(self):
         urls_hide = self.status.entities.get("urls", [])
+        # filter expanded_url not have twitter.com
+        urls_hide = list(filter(lambda url_hide: "twitter.com" not in url_hide["expanded_url"], urls_hide))
+
         if len(urls_hide) == 0:
             return ""
         return hide_link(urls_hide[0]["expanded_url"])

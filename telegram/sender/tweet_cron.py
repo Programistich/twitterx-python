@@ -77,20 +77,19 @@ async def send_tweet(chat_id: str, reply_message_id: int, tweet):
         message_id = message[0].message_id
 
     else:
+        hide_link = tweet.get_hide_link()
         message = await telegram_bot.send_message(
-            chat_id=chat_id,
-            text=message_text,
+            text=hide_link + message_text,
             parse_mode="HTML",
             reply_to_message_id=reply_message_id,
-            disable_web_page_preview=False
+            disable_web_page_preview=hide_link == ""
         )
         message_id = message.message_id
     return message_id
 
 
 def get_tweet_header(tweet: TweetModel):
-    hide_link = tweet.get_hide_link()
-    return f"{hide_link}<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()}"
+    return f"<a href='{tweet.get_tweet_url()}'>Твит</a> от {tweet.user.get_url_html()}"
 
 
 def get_tweet_body(tweet: TweetModel):
