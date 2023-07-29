@@ -1,10 +1,13 @@
 import asyncio
 import logging
 
+import aiocron as aiocron
+
 from telegram.client import dp, bot
 from telegram.handler import tweet
+from twitter.cron import cron_tweet
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 async def main():
@@ -13,5 +16,17 @@ async def main():
     await dp.start_polling(bot)
 
 
+async def job_every_10_seconds():
+    while True:
+        await cron_tweet()
+
+
+async def run_tasks():
+    task1 = asyncio.create_task(main())
+    task2 = asyncio.create_task(job_every_10_seconds())
+    await task1
+    await task2
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run_tasks())

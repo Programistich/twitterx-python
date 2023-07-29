@@ -12,3 +12,10 @@ async def get_message_id(chat_id, tweet_id):
 
 async def set_message_id(chat_id, tweet_id, message_id):
     return await client.set(f'{chat_id}:{tweet_id}', message_id)
+
+
+async def get_user_last_tweet(user_id):
+    return await client.get(user_id)
+
+async def set_user_last_tweet(user_id, tweet_id):
+    return await client.set(user_id, tweet_id)

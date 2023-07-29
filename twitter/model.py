@@ -1,5 +1,7 @@
 from enum import Enum
 
+from aiogram import types
+from aiogram.types import URLInputFile
 from aiogram.utils.markdown import hide_link
 
 
@@ -114,7 +116,7 @@ class TweetModel:
                     media.append(Media(MediaType.VIDEO, best_video_url))
         return media
 
-    def __parse_reply__(self) -> str:
+    def __parse_reply__(self):
         if self.status.in_reply_to_status_id_str is not None:
             return self.status.in_reply_to_status_id_str
 
@@ -122,3 +124,21 @@ class TweetModel:
             return self.status.quoted_status_id_str
 
         return None
+
+    def get_telegram_media(self, telegram_bot, message_text):
+        result = []
+        for index, media in enumerate(self.media):
+            file = URLInputFile(url=media.url, bot=telegram_bot)
+
+            if media.type.value == "photo":
+                if index == 0:
+                    result.append(types.InputMediaPhoto(media=file, caption=message_text, parse_mode="HTML"))
+                else:
+                    result.append(types.InputMediaPhoto(media=file))
+            elif media.type.value == "video":
+                if index == 0:
+                    result.append(types.InputMediaVideo(media=file, caption=message_text, parse_mode="HTML"))
+                else:
+                    result.append(types.InputMediaVideo(media=file))
+
+        return result
