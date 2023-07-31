@@ -88,5 +88,5 @@ async def process_like(user_id):
     # save last status id
     last_status = filter_statuses[0]
     log.info("last_status: %s", last_status)
-    result_save = await set_user_last_tweet(user_id, last_status.id)
+    result_save = await set_user_last_like(user_id, last_status.id)
     log.info("result_save: %s", result_save)
