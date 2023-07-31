@@ -53,7 +53,7 @@ async def send_like(chat_id: str, tweet_id, user: UserModel):
 
 
 def get_tweet_header(tweet: TweetModel, user: UserModel):
-    return f"<a href='{tweet.get_tweet_url()}'>Лайк</a> от {user.get_url_html()}"
+    return f"<a href='{tweet.get_tweet_url()}'>Лайк</a> от {user.get_url_html()} на твит от {tweet.user.get_url_html()}"
 
 
 def get_tweet_body(tweet: TweetModel):
