@@ -6,6 +6,8 @@ services:
     networks:
       twitter-net:
     container_name: twitter-redis
+    volumes:
+      - redis-data:/data
     image: redis:alpine
     restart: always
     environment:
@@ -30,3 +32,6 @@ services:
 
 networks:
   twitter-net:
+
+volumes:
+  redis-data:
