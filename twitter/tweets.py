@@ -1,5 +1,5 @@
 from twitter.client import twitter
-from twitter.model import TweetModel
+from twitter.model import TweetModel, UserModel
 from googletrans import Translator, LANGUAGES
 
 translator = Translator()
@@ -14,6 +14,11 @@ def get_tweet_by_id(tweet_id) -> TweetModel:
     )
 
     return TweetModel(status)
+
+
+def get_user_by_id(user_id):
+    user = twitter.get_user(user_id=user_id)
+    return UserModel(user)
 
 
 def find_tweet_branch(tweet_id) -> [str]:
