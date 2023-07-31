@@ -1,8 +1,6 @@
 import asyncio
 import logging
 
-import aiocron as aiocron
-
 from telegram.client import dp, bot
 from telegram.handler import tweet
 from twitter.cron import cron_tweet

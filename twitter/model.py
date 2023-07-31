@@ -122,7 +122,6 @@ class TweetModel:
                         best_bitrate = video_bitrate
                         best_video_url = video_url
                 if best_video_url is not None:
-                    print("best_video_url", best_video_url, "best_bitrate", best_bitrate)
                     media.append(Media(MediaType.VIDEO, best_video_url))
         return media
 
