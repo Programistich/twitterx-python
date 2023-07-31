@@ -16,7 +16,7 @@ async def cron_tweet():
         await process_tweet(twitter_id)
         await process_like(twitter_id)
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(120)
 
 
 async def process_tweet(user_id):
