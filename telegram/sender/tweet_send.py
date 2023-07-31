@@ -40,7 +40,6 @@ async def send_many_tweet(
 
     chat_id, message_id = await send_tweet(is_main_tweet, message, reply_message_id, tweet)
     result = await set_message_id(chat_id, tweet.id_str, message_id)
-    print(f"Set message_id: {result}")
     return message_id
 
 
