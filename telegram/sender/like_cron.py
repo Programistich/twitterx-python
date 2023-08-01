@@ -59,7 +59,6 @@ async def send_like(chat_id: str, tweet_id, user: UserModel):
             disable_web_page_preview=hide_link == ""
         )
         message_id = message.message_id
-    await asyncio.sleep(10)
     return message_id
 
 

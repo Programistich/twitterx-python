@@ -53,7 +53,6 @@ async def send_many_tweet(
             log.error("error send_message %s %s %s", chat_id, tweet.id_str, e)
             message_id = None
 
-    await asyncio.sleep(10)
     await set_message_id(chat_id, tweet.id_str, message_id)
     return message_id
 
@@ -105,7 +104,6 @@ async def send_tweet(chat_id: str, reply_message_id: int, tweet):
             disable_web_page_preview=hide_link == ""
         )
         message_id = message.message_id
-    await asyncio.sleep(10)
     return message_id
 
 

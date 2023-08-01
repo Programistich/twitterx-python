@@ -47,6 +47,7 @@ async def process_tweet(user_id):
         for chat_id in chat_ids:
             try:
                 await send_tweets(tweet_id=filter_status.id, chat_id=chat_id)
+                await asyncio.sleep(5)
             except Exception as e:
                 log.error("error %s %s %s",chat_id, filter_status.id, e)
 
@@ -82,6 +83,7 @@ async def process_like(user_id):
         for chat_id in chat_ids:
             try:
                 await send_like(tweet_id=filter_status.id, chat_id=chat_id, user=user)
+                await asyncio.sleep(5)
             except Exception as e:
                 try:
                     log.error("error %s %s %s", chat_id, filter_status.id, e)
