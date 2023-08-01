@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import types
 from aiogram.types import URLInputFile
@@ -7,6 +8,8 @@ from cache.client import set_message_id, get_message_id
 from telegram.client import bot as telegram_bot
 from twitter.model import TweetModel
 from twitter.tweets import get_tweet_by_id, translate_tweet_text, find_tweet_branch
+
+log = logging.getLogger(__name__)
 
 
 async def send_tweets(tweet_id: str, message: types.Message, reply_message_id=None) -> int:
@@ -40,8 +43,25 @@ async def send_many_tweet(
     if exist_message_id is not None:
         return exist_message_id
 
-    chat_id, message_id = await send_tweet(is_main_tweet, message, reply_message_id, tweet)
-    result = await set_message_id(chat_id, tweet.id_str, message_id)
+    chat_id = message.chat.id
+
+    try:
+        message_id = await send_tweet(is_main_tweet, message, reply_message_id, tweet)
+    except Exception as e:
+        log.error("error %s %s %s", chat_id, tweet.id_str, e)
+        try:
+            await asyncio.sleep(10)
+            result = await message.answer(
+                text=f"Ошибка при отправке твита {tweet.get_tweet_url()}",
+                parse_mode="HTML",
+                reply_to_message_id=reply_message_id,
+                disable_web_page_preview=False
+            )
+            message_id = result.message_id
+        except Exception as e:
+            log.error("error %s %s %s", chat_id, tweet.id_str, e)
+            message_id = None
+    await set_message_id(chat_id, tweet.id_str, message_id)
     await asyncio.sleep(5)
     return message_id
 
@@ -59,7 +79,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
             reply_to_message_id=reply_message_id
         )
         message_id = message.message_id
-        chat_id = message.chat.id
+
 
     elif tweet.is_single_video():
         video_file = URLInputFile(url=tweet.single_media().url, bot=telegram_bot)
@@ -94,7 +114,7 @@ async def send_tweet(is_main_tweet, message, reply_message_id, tweet):
         )
         message_id = message.message_id
         chat_id = message.chat.id
-    return chat_id, message_id
+    return message_id
 
 
 def get_tweet_header(tweet: TweetModel, telegram_user, is_main_tweet):
