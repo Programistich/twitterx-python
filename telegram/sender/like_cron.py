@@ -1,8 +1,18 @@
+import asyncio
+
 from aiogram.types import URLInputFile
 
 from telegram.client import bot as telegram_bot
 from twitter.model import TweetModel, UserModel
-from twitter.tweets import get_tweet_by_id, translate_tweet_text, find_tweet_branch
+from twitter.tweets import get_tweet_by_id, translate_tweet_text
+
+
+async def send_error_like(chat_id: str, user: UserModel, tweet_id: str):
+    await telegram_bot.send_message(
+        text=f"Ошибка при отправке лайка от {user.screen_name} на твит {tweet_id}",
+        parse_mode="HTML",
+        chat_id=chat_id
+    )
 
 
 async def send_like(chat_id: str, tweet_id, user: UserModel):
@@ -49,6 +59,7 @@ async def send_like(chat_id: str, tweet_id, user: UserModel):
             disable_web_page_preview=hide_link == ""
         )
         message_id = message.message_id
+    await asyncio.sleep(10)
     return message_id
 
 

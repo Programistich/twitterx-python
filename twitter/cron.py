@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from cache.client import get_user_last_tweet, set_user_last_tweet, get_user_last_like, set_user_last_like
-from telegram.sender.like_cron import send_like
+from telegram.sender.like_cron import send_like, send_error_like
 from telegram.sender.tweet_cron import send_tweets
 from twitter.client import twitter
 from twitter.tweets import get_user_by_id
@@ -83,7 +83,12 @@ async def process_like(user_id):
             try:
                 await send_like(tweet_id=filter_status.id, chat_id=chat_id, user=user)
             except Exception as e:
-                log.error("error %s %s %s",chat_id, filter_status.id, e)
+                try:
+                    log.error("error %s %s %s", chat_id, filter_status.id, e)
+                    await send_error_like(chat_id=chat_id, user=user, tweet_id=filter_status.id)
+                except Exception as e:
+                    log.error("error send_error_like %s %s %s", chat_id, filter_status.id, e)
+
 
     # save last status id
     last_status = filter_statuses[0]

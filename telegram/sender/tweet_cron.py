@@ -1,9 +1,14 @@
+import asyncio
+import logging
+
 from aiogram.types import URLInputFile
 
 from cache.client import set_message_id, get_message_id
 from telegram.client import bot as telegram_bot
 from twitter.model import TweetModel
 from twitter.tweets import get_tweet_by_id, translate_tweet_text, find_tweet_branch
+
+log = logging.getLogger(__name__)
 
 
 async def send_tweets(tweet_id: str, chat_id: str) -> int:
@@ -32,8 +37,24 @@ async def send_many_tweet(
     if exist_message_id is not None:
         return exist_message_id
 
-    message_id = await send_tweet(chat_id, reply_message_id, tweet)
-    result = await set_message_id(chat_id, tweet.id_str, message_id)
+    try:
+        message_id = await send_tweet(chat_id, reply_message_id, tweet)
+    except Exception as e:
+        log.error("error send_tweet %s %s %s", chat_id, tweet.id_str, e)
+        await asyncio.sleep(10)
+        try:
+            result = await telegram_bot.send_message(
+                text=f"Ошибка при отправке твита {tweet.id_str} от {tweet.user.screen_name}",
+                chat_id=chat_id,
+                reply_to_message_id=reply_message_id
+            )
+            message_id = result.message_id
+        except Exception as e:
+            log.error("error send_message %s %s %s", chat_id, tweet.id_str, e)
+            message_id = None
+
+    await asyncio.sleep(10)
+    await set_message_id(chat_id, tweet.id_str, message_id)
     return message_id
 
 
@@ -84,6 +105,7 @@ async def send_tweet(chat_id: str, reply_message_id: int, tweet):
             disable_web_page_preview=hide_link == ""
         )
         message_id = message.message_id
+    await asyncio.sleep(10)
     return message_id
 
 
