@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import types
 from aiogram.types import URLInputFile
 
@@ -40,6 +42,7 @@ async def send_many_tweet(
 
     chat_id, message_id = await send_tweet(is_main_tweet, message, reply_message_id, tweet)
     result = await set_message_id(chat_id, tweet.id_str, message_id)
+    await asyncio.sleep(5)
     return message_id
 
 
