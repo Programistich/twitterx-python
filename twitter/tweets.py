@@ -1,6 +1,8 @@
 from twitter.client import twitter
 from twitter.model import TweetModel, UserModel
 from googletrans import Translator, LANGUAGES
+from aiogram import html as aiogram_html
+import html
 
 translator = Translator()
 
@@ -34,3 +36,14 @@ def translate_tweet_text(text: str, lang: str):
         lang = "auto"
 
     return translator.translate(text, src=lang, dest="ru")
+
+
+def get_tweet_body(tweet: TweetModel):
+    tweet_text = html.unescape(tweet.text)
+    translate_tweet = translate_tweet_text(tweet_text, tweet.lang)
+
+    if translate_tweet.dest == translate_tweet.src:
+        return aiogram_html.quote(tweet_text)
+
+    else:
+        return f"[{translate_tweet.src.upper()}] {aiogram_html.quote(tweet_text)}\n\n[{translate_tweet.dest.upper()}] {aiogram_html.quote(translate_tweet.text)}"

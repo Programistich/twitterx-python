@@ -1,9 +1,13 @@
 import re
 from enum import Enum
 
+import requests
 from aiogram import types
+from aiogram import html
 from aiogram.types import URLInputFile
 from aiogram.utils.markdown import hide_link
+
+file_size_in_bytes = 20 * 1024 * 1024
 
 
 class MediaType(Enum):
@@ -118,7 +122,8 @@ class TweetModel:
                 for variant in media_item["video_info"]["variants"]:
                     video_url = variant["url"]
                     video_bitrate = variant.get("bitrate", 0)
-                    if best_video_url is None or video_bitrate > best_bitrate:
+                    video_size = get_file_size(video_url)
+                    if best_video_url is None or video_bitrate > best_bitrate and video_size < file_size_in_bytes:
                         best_bitrate = video_bitrate
                         best_video_url = video_url
                 if best_video_url is not None:
@@ -151,3 +156,14 @@ class TweetModel:
                     result.append(types.InputMediaVideo(media=file))
 
         return result
+
+
+def get_file_size(url):
+    response = requests.head(url)
+    content_length = response.headers.get('Content-Length')
+
+    if content_length:
+        size_in_bytes = int(content_length)
+        return size_in_bytes
+    else:
+        return 0

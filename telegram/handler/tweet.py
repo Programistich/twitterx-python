@@ -1,9 +1,10 @@
 import re
 
 from aiogram import types, Router
+from aiogram.filters import Command, CommandObject
 
 import telegram.client
-from telegram.sender.tweet_send import  send_tweets
+from telegram.sender.tweet_send import send_tweets, send_tweet, send_single_tweet
 
 router = Router()
 
@@ -21,7 +22,21 @@ async def get_tweets_by_link(message: types.Message):
     else:
         reply_to_message_id = message.reply_to_message.message_id
 
+    await message.delete()
     await send_tweets(tweet_id, message, reply_to_message_id)
 
-    # delete message with link
+
+@telegram.client.dp.message(Command("single"))
+async def get_tweet_by_link(message: types.Message, command: CommandObject):
+    text = command.args.strip()
+    tweet_id = tweet_pattern.match(text).group(TWEET_ID_GROUP)
+    if tweet_id is None:
+        return
+
+    if message.reply_to_message is None:
+        reply_to_message_id = None
+    else:
+        reply_to_message_id = message.reply_to_message.message_id
+
     await message.delete()
+    await send_single_tweet(tweet_id, message, reply_to_message_id)
