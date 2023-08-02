@@ -2,7 +2,6 @@ from twitter.client import twitter
 from twitter.model import TweetModel, UserModel
 from googletrans import Translator, LANGUAGES
 from aiogram import html as aiogram_html
-import html
 
 translator = Translator()
 

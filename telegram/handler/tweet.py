@@ -2,8 +2,10 @@ import re
 
 from aiogram import types, Router
 from aiogram.filters import Command, CommandObject
+from aiogram.handlers import inline_query
 
 import telegram.client
+from telegram.sender.tweet_inline import send_inline_tweet
 from telegram.sender.tweet_send import send_tweets, send_tweet, send_single_tweet
 
 router = Router()
@@ -40,3 +42,18 @@ async def get_tweet_by_link(message: types.Message, command: CommandObject):
 
     await message.delete()
     await send_single_tweet(tweet_id, message, reply_to_message_id)
+
+
+@telegram.client.dp.inline_query()
+async def get_tweet_by_link_inline(inline: types.InlineQuery):
+    try:
+        text = inline.query.strip()
+        tweet_match = tweet_pattern.match(text)
+        if tweet_match is None:
+            return
+        tweet_id = tweet_match.group(TWEET_ID_GROUP)
+        if tweet_id is None:
+            return
+        await send_inline_tweet(tweet_id, inline)
+    except Exception as e:
+        print(e)

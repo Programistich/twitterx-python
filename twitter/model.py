@@ -158,6 +158,11 @@ class TweetModel:
         return result
 
 
+    def get_message_entity(self):
+        pass
+
+
+
 def get_file_size(url):
     response = requests.head(url)
     content_length = response.headers.get('Content-Length')
