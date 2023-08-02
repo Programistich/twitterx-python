@@ -39,11 +39,11 @@ def translate_tweet_text(text: str, lang: str):
 
 
 def get_tweet_body(tweet: TweetModel):
-    tweet_text = html.unescape(tweet.text)
+    tweet_text = tweet.text
     translate_tweet = translate_tweet_text(tweet_text, tweet.lang)
 
     if translate_tweet.dest == translate_tweet.src:
         return aiogram_html.quote(tweet_text)
 
     else:
-        return f"[{translate_tweet.src.upper()}] {aiogram_html.quote(tweet_text)}\n\n[{translate_tweet.dest.upper()}] {aiogram_html.quote(translate_tweet.text)}"
+        return f"[{translate_tweet.src.upper()}] {tweet_text}\n\n[{translate_tweet.dest.upper()}] {translate_tweet.text}"
