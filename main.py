@@ -30,5 +30,5 @@ async def run_tasks():
 
 
 if __name__ == "__main__":
-    process_login()
-    asyncio.run(run_tasks())
+    # process_login()
+    asyncio.run(process_bot())
