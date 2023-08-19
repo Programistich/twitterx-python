@@ -6,9 +6,8 @@ from aiogram.types import User
 
 import cache.client
 from telegram.sender import telegram_sender
-from twitter.client import get_tweet, get_tweet_branch
+from twitter.client import get_tweet_branch
 from twitter.models import Tweet
-from twitter.translate import get_translated_tweet_body
 
 logger = logging.getLogger("telegram.processor.get_tweets")
 redis = cache.client.redis_client
@@ -20,11 +19,9 @@ async def get_tweets_processor(
         username: str,
         from_user: User,
         reply_id: int,
-        message_id: int,
 ):
     """Get tweets processor."""
     await telegram_sender.send_action_typing(chat_id)
-    await telegram_sender.delete(chat_id=chat_id, message_id=message_id)
     already_reply_id = await redis.get_message_id(chat_id, tweet_id)
     if already_reply_id is not None:
         await telegram_sender.send_message(chat_id, text = "Твит уже был отправлен ранее", reply_to_message_id=already_reply_id)

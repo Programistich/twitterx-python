@@ -10,6 +10,7 @@ from aiogram.types import Message, InlineQuery, ErrorEvent
 from telegram.processors.get_tweets import get_tweets_processor
 from telegram.processors.start_command import start_processor
 from telegram.processors.tweet_inline import get_tweet_inline_processor
+from telegram.sender import telegram_sender
 
 # objects
 router = Router()
@@ -41,13 +42,13 @@ async def get_tweets_by_link(message: Message):
     username = tweet_pattern.match(message.text).group(USERNAME_GROUP)
     reply_id = process_reply(message)
 
+    await telegram_sender.delete(chat_id=message.chat.id, message_id=message.message_id)
     await get_tweets_processor(
         chat_id=message.chat.id,
         reply_id=reply_id,
         tweet_id=tweet_id,
         username=username,
-        from_user=message.from_user,
-        message_id = message.message_id
+        from_user=message.from_user
     )
 
 

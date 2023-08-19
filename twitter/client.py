@@ -4,10 +4,7 @@ from typing import List
 import aiohttp
 import unittest
 
-from googletrans import LANGUAGES
-
 from twitter.models import TweetData, Tweet
-from twitter.translate import translator
 
 
 async def get_tweet(tweet_id: str, username: str) -> Tweet:
