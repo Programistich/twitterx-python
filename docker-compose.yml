@@ -25,6 +25,7 @@ services:
     restart: always
     depends_on:
       - twitter-redis
+      - selenium-firefox
     environment:
       - REDIS_HOST
       - TWITTER_BEARER
