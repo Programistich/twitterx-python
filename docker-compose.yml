@@ -25,20 +25,11 @@ services:
     restart: always
     depends_on:
       - twitter-redis
-      - selenium-firefox
     environment:
       - REDIS_HOST
       - TWITTER_BEARER
       - BOT_TOKEN
       - TWITTER_PASSWORD
-
-  selenium-firefox:
-    networks:
-      - twitter-net
-    container_name: selenium-firefox
-    image: selenium/standalone-firefox:latest
-    ports:
-      - "4444:4444"
 
 networks:
   twitter-net:

@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 
 options = webdriver.FirefoxOptions()
 options.add_argument("--enable-javascript")
+options.add_argument("--headless")
 
 browser = webdriver.Firefox(options=options)
 
