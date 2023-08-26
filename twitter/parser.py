@@ -1,3 +1,4 @@
+# import logging
 # import os
 # import time
 #
@@ -8,12 +9,16 @@
 #
 # options = webdriver.FirefoxOptions()
 # options.add_argument("--enable-javascript")
-# options.add_argument("--headless")
+# # options.add_argument("--headless")
+# options.add_argument("-private")
 #
 # browser = webdriver.Firefox(options=options)
 #
+# logger = logging.getLogger("twitter_parser")
+#
 #
 # def process_login():
+#     logger.info("process login")
 #     # go to twitter and login from browser
 #
 #     password = os.getenv("TWITTER_PASSWORD")
@@ -21,16 +26,28 @@
 #
 #     browser.get("https://twitter.com/i/flow/login")
 #     time.sleep(5)
+#     logger.info("login page loaded")
+#
 #     # send username
 #     elem = browser.find_element(by=By.CSS_SELECTOR, value='.r-30o5oe')
 #     elem.clear()
 #     elem.send_keys(username)
 #     elem.send_keys(Keys.ENTER)
 #     time.sleep(5)
+#     logger.info("username sent")
+#
+#
 #     # send password
 #     elem = browser.find_element(by=By.CSS_SELECTOR, value='.r-homxoj')
+#     elem.clear()
 #     elem.send_keys(password)
 #     elem.send_keys(Keys.ENTER)
+#     logger.info("password sent")
+#
+#     # phone verification
+#
+#     # send code
+#
 #     # wait loading
 #     time.sleep(20)
 #
@@ -110,8 +127,9 @@
 #
 #     return tweets_id
 #
+#
 # #
-# # process_login()
-# # print(get_last_tweets("elonmusk"))
-# # print(get_last_likes("elonmusk"))
-# # browser.quit()
+# process_login()
+# print(get_last_tweets("elonmusk"))
+# print(get_last_likes("elonmusk"))
+# browser.quit()

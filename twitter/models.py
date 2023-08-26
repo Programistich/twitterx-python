@@ -135,10 +135,15 @@ class Tweet:
         if self.media is None:
             return None
 
-        if self.media.mosaic is None:
+        if self.media.mosaic is not None:
+            return self.media.mosaic.url_jpeg
+
+        photos = self.media.photos
+
+        if len(photos) == 0:
             return None
 
-        return self.media.mosaic.url_jpeg
+        return photos[0].url
 
     def get_tweet_url(self):
         return f"https://twitter.com/{self.author.screen_name}/status/{self.id}"
