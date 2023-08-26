@@ -14,11 +14,13 @@ class Author:
 
 class Video:
     url: str
+    thumbnail_url: str
     type: str
 
     def __init__(self, video_json):
         self.url = video_json.get("url")
         self.type = video_json.get("type")
+        self.thumbnail_url = video_json.get("thumbnail_url")
 
 
 class Photo:
@@ -139,11 +141,14 @@ class Tweet:
             return self.media.mosaic.url_jpeg
 
         photos = self.media.photos
+        if len(photos) > 0:
+            return photos[0].url
 
-        if len(photos) == 0:
-            return None
+        videos = self.media.videos
+        if len(videos) > 0:
+            return videos[0].thumbnail_url
 
-        return photos[0].url
+        return None
 
     def get_tweet_url(self):
         return f"https://twitter.com/{self.author.screen_name}/status/{self.id}"
