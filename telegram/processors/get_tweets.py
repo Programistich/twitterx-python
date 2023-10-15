@@ -46,7 +46,8 @@ async def get_tweets_processor(
     except Exception as e:
         await telegram_sender.send_message(
             chat_id = chat_id,
-            text = f"Произошла ошибка при отправке цепочки <a href='https://fxtwitter.com/{username}/status/{tweet_id}'>твитов</a>"
+            text = f"Произошла ошибка при отправке цепочки <a href='https://fxtwitter.com/{username}/status/{tweet_id}'>твитов</a>",
+            disable_web_page_preview=False
         )
         logger.error("error %s %s %s", chat_id, tweet_id, e)
 
@@ -70,6 +71,7 @@ async def send_tweet(chat_id, reply_message_id, tweet: Tweet, user: User) -> int
                 chat_id=chat_id,
                 text=f"Ошибка при отправке твита {url}",
                 reply_to_message_id=reply_message_id,
+                disable_web_page_preview=False
             )
         except Exception as e:
             logger.error("error %s %s %s", chat_id, tweet.id, e)
