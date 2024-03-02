@@ -32,6 +32,7 @@ services:
       - TWITTER_PASSWORD
       - TWITTER_USERNAME
       - OPENAI_TOKEN
+      - TWITTER_COOKIES
 
 networks:
   twitter-net:

@@ -12,8 +12,9 @@ app = Twitter("session")
 try:
     app.sign_in(x_username, x_password)
 except Exception as e:
-    action = input(f"Action Required :> {str(e.message)} : ")
-    app.sign_in(x_username, x_password, extra=action)
+    cookies_value = os.getenv("TWITTER_COOKIES")
+    app.load_cookies(cookies_value)
+    print(app.me)
 
 
 def get_last_tweets(username):
