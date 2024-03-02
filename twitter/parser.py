@@ -9,7 +9,11 @@ if not x_username or not x_password:
     raise ValueError("TWITTER_USERNAME or TWITTER_PASSWORD not found")
 
 app = Twitter("session")
-app.sign_in(x_username, x_password)
+try:
+    app.sign_in(x_username, x_password)
+except Exception as e:
+    action = input(f"Action Required :> {str(e.message)} : ")
+    app.sign_in(x_username, x_password, extra=action)
 
 
 def get_last_tweets(username):
