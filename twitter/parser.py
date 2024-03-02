@@ -1,3 +1,22 @@
+import os
+
+from tweety import Twitter
+
+x_username = os.getenv("TWITTER_USERNAME")
+x_password = os.getenv("TWITTER_PASSWORD")
+
+if not x_username or not x_password:
+    raise ValueError("TWITTER_USERNAME or TWITTER_PASSWORD not found")
+
+app = Twitter("session")
+app.sign_in(x_username, x_password)
+
+
+def get_last_tweets(username):
+    tweets = app.get_tweets(username)
+    return [tweet.id for tweet in tweets]
+
+
 # import logging
 # import os
 # import time
