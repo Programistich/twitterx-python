@@ -30,6 +30,8 @@ services:
       - TWITTER_BEARER
       - BOT_TOKEN
       - TWITTER_PASSWORD
+      - TWITTER_USERNAME
+      - OPENAI_TOKEN
 
 networks:
   twitter-net:
