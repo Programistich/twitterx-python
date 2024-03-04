@@ -17,7 +17,7 @@ router = Router()
 logger = logging.getLogger("telegram.handler")
 
 # block regex
-TWEET_REGEX = "https://(?:mobile\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9_]+)/status/([0-9]+)?(.*)"
+TWEET_REGEX = r"https://(?:mobile\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9_]+)/status/([0-9]+)?(.*)"
 TWEET_ID_GROUP = 2
 USERNAME_GROUP = 1
 tweet_pattern = re.compile(TWEET_REGEX)

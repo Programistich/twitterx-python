@@ -6,7 +6,7 @@ from telegram.client import dispatcher, telegram_bot
 from telegram.handler import router
 from twitter.cron import cron_tweet
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 async def process_bot():

@@ -1,9 +1,12 @@
+import logging
 import os
 
 from tweety import Twitter
 
 x_username = os.getenv("TWITTER_USERNAME")
 x_password = os.getenv("TWITTER_PASSWORD")
+
+logger = logging.getLogger("twitter.parser")
 
 if not x_username or not x_password:
     raise ValueError("TWITTER_USERNAME or TWITTER_PASSWORD not found")
@@ -12,9 +15,13 @@ app = Twitter("session")
 try:
     app.sign_in(x_username, x_password)
 except Exception as e:
+    logger.error("Error occurred while signing in: %s", e)
     cookies_value = os.getenv("TWITTER_COOKIES")
-    app.load_cookies(cookies_value)
-    print(app.me)
+    try:
+        app.load_cookies(cookies_value)
+        print(app.me)
+    except Exception as e:
+        logger.error("Error occurred while loading cookies: %s", e)
 
 
 def get_last_tweets(username):

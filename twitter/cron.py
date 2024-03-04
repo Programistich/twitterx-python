@@ -22,7 +22,7 @@ async def process_tweet(username):
     last_tweets = get_last_tweets(username=username)
     log.info("statuses ids %s", last_tweets)
     log.info("statuses len %s", len(last_tweets))
-    if not last_tweets:
+    if len(last_tweets) == 0:
         return
 
     # get statuses where id more than last_tweet_id, but if last_tweet_id is None, get last status
