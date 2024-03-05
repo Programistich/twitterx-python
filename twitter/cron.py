@@ -26,7 +26,7 @@ async def process_tweet(username):
         return
 
     # get statuses where id more than last_tweet_id, but if last_tweet_id is None, get last status
-    last_tweet_id = await cache.client.redis_client.get_user_last_tweet(user_id = username)
+    last_tweet_id = await cache.client.redis_client.get_user_last_tweet(user_id=username)
     log.info("last_tweet_id %s", last_tweet_id)
     if last_tweet_id is None:
         filter_statuses = [last_tweets[0]]
@@ -39,7 +39,9 @@ async def process_tweet(username):
         return
 
     for filter_status in filter_statuses:
+        log.info("filter_status %s", filter_status)
         for chat_id in chat_ids:
+            log.info("chat_id to filter_status %s", chat_id)
             try:
                 await get_tweets_processor(
                     chat_id=int(chat_id),
@@ -47,17 +49,17 @@ async def process_tweet(username):
                     username=username,
                     from_user=None,
                     reply_id=None,
+                    check_exist=False
                 )
                 await asyncio.sleep(5)
             except Exception as e:
-                log.error("error %s %s %s",chat_id, filter_status, e)
+                log.error("error %s %s %s", chat_id, filter_status, e)
 
     # save last status id
     last_status = filter_statuses[0]
     log.info("last_status: %s", last_status)
-    result_save = await cache.client.redis_client.set_user_last_tweet(user_id = username, tweet_id = last_status)
+    result_save = await cache.client.redis_client.set_user_last_tweet(user_id=username, tweet_id=last_status)
     log.info("result_save: %s", result_save)
-
 
 # async def process_like(user_id):
 #     log.info("process_like")

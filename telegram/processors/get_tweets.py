@@ -19,13 +19,16 @@ async def get_tweets_processor(
         username: str,
         from_user: User,
         reply_id: int,
+        check_exist: bool = True
 ):
+    logger.info("get_tweets_processor by %s %s %s", chat_id, tweet_id, username)
     """Get tweets processor."""
     await telegram_sender.send_action_typing(chat_id)
-    already_reply_id = await redis.get_message_id(chat_id, tweet_id)
-    if already_reply_id is not None:
-        await telegram_sender.send_message(chat_id, text = "Твит уже был отправлен ранее", reply_to_message_id=already_reply_id)
-        return
+    if check_exist:
+        already_reply_id = await redis.get_message_id(chat_id, tweet_id)
+        if already_reply_id is not None:
+            await telegram_sender.send_message(chat_id, text = "Твит уже был отправлен ранее", reply_to_message_id=already_reply_id)
+            return
 
     try:
         tweets_branch = await get_tweet_branch(username=username, tweet_id=tweet_id)

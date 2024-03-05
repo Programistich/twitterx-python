@@ -26,13 +26,9 @@ def translate_text(text, target_language):
 
 
 def translate_tweet_text(tweet: Tweet, to_lang: str = "en") -> Translated:
-    tweet_lang = tweet.lang or "auto"
-    if tweet_lang not in LANGUAGES:
-        tweet_lang = "auto"
-
     return Translated(
         text=translate_text(tweet.text, to_lang),
-        src=tweet_lang,
+        src=tweet.lang,
         dest=to_lang
     )
 
