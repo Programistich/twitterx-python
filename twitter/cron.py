@@ -32,16 +32,17 @@ async def process_tweet(username):
         filter_statuses = [last_tweets[0]]
     else:
         filter_statuses = [status for status in last_tweets if int(status) > int(last_tweet_id)]
-    log.info("filter_statuses len: %s", len(filter_statuses))
 
     if len(filter_statuses) == 0:
         log.info("no new tweet")
         return
 
+    log.info("filter_statuses len: %s", len(filter_statuses))
+    log.info("filter_statuses %s", filter_statuses)
     for filter_status in filter_statuses:
         log.info("filter_status %s", filter_status)
         for chat_id in chat_ids:
-            log.info("chat_id to filter_status %s", chat_id)
+            log.info("chat_id %s to filter_status %s", chat_id, filter_status)
             try:
                 await get_tweets_processor(
                     chat_id=int(chat_id),
