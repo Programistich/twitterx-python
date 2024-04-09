@@ -2,6 +2,7 @@ import logging
 import os
 
 from tweety import Twitter
+from tweety.types import SelfThread
 
 x_username = os.getenv("TWITTER_USERNAME")
 x_password = os.getenv("TWITTER_PASSWORD")
@@ -25,9 +26,17 @@ except Exception as e:
 
 
 def get_last_tweets(username):
-    tweets = app.get_tweets(username)
-    return [tweet.id for tweet in tweets]
+    raw_tweets = app.get_tweets(username).tweets
+    tweets = []
 
+    for tweet in raw_tweets:
+        if isinstance(tweet, SelfThread):
+            tweets.extend(tweet.tweets)
+        else:
+            tweets.append(tweet)
+
+    tweet_ids = [tweet.id for tweet in tweets]
+    return tweet_ids
 
 # import logging
 # import os
