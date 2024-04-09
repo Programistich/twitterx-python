@@ -43,6 +43,9 @@ def get_emoji_by_lang(lang: str) -> str:
 
 
 def get_translated_tweet_body(tweet: Tweet, to_lang="en"):
+    if tweet.text.strip() == "":
+        return ""
+
     translate = translate_tweet_text(tweet, to_lang)
 
     if translate.src == translate.dest:
