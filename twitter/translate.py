@@ -13,12 +13,15 @@ class Translated:
 
 
 def translate_text(text, target_language):
+    if text.strip() == "":
+        return ""
+
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {
                 "role": "system",
-                "content": f"Translate the following text into {target_language}: {text}\n"
+                "content": f"Translate the following text into {target_language}: {text}\n In additional, ignore urls and mentions in translation."
             }
         ]
     )
